@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useCart } from '../../context/CartContext'
 import { Container, Row, Col, Badge, Button, Card, Toast, ToastContainer, Spinner } from 'react-bootstrap'
+import type { Product } from '../../models/Product'
 
 function SingleProduct() {
   const { index } = useParams()
   const { addToCart } = useCart()
-  const [product, setProduct] = useState(null)
+  const [product, setProduct] = useState<Product>()
   const [loading, setLoading] = useState(true)
   const [showToast, setShowToast] = useState(false)
 
@@ -78,11 +79,11 @@ function SingleProduct() {
                 <div className="d-flex align-items-center gap-3 mb-4">
                   <div>
                     <span className="text-warning fs-5">⭐</span>
-                    <strong className="fs-5"> {product.rating.rate}</strong>
+                    <strong className="fs-5"> {product.rating}</strong>
                     <span className="text-muted"> / 5</span>
                   </div>
                   <div className="text-muted">
-                    ({product.rating.count} reviews)
+                    ({product.count} reviews)
                   </div>
                 </div>
               )}

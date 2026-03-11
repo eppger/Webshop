@@ -15,6 +15,7 @@ import MaintainShops from './pages/admin/MaintainShops'
 import Login from './pages/auth/Login'
 import SignUp from './pages/auth/SignUp'
 import NotFound from './pages/global/NotFound'
+import RequireAuth from './components/RequireAuth'
 
 function App() {
   return (
@@ -28,12 +29,14 @@ function App() {
         <Route path='cart' element={<Cart />} />
         <Route path='product/:index' element={<SingleProduct />} />
 
+        <Route element={<RequireAuth />}>
         <Route path='admin' element={<AdminHome />} />
         <Route path='admin/add-product' element={<AddProduct />} />
         <Route path='admin/edit-product/:index' element={<EditProduct />} />
         <Route path='admin/maintain-products' element={<MaintainProducts />} />
         <Route path='admin/maintain-categories' element={<MaintainCategories />} />
         <Route path='admin/maintain-shops' element={<MaintainShops />} />
+        </Route>
 
         <Route path='login' element={<Login />} />
         <Route path='signup' element={<SignUp />} />

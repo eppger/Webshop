@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import type { Category } from "../../models/Category";
 
 function MaintainCategories() {
-  const [categories, setCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState({ name: "", avatar: "" });
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [newCategory, setNewCategory] = useState<Category>({ name: "", avatar: "" });
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
-  const [editingId, setEditingId] = useState(null);
+  const [editingId, setEditingId] = useState(0);
   const [editData, setEditData] = useState({ name: "", avatar: "" });
 
   useEffect(() => {
@@ -28,7 +29,7 @@ function MaintainCategories() {
       });
   };
 
-  const deleteCategory = (categoryId, categoryIndex) => {
+  const deleteCategory = (categoryId: number, categoryIndex: number) => {
     if (!window.confirm("Delete this category?")) return;
     fetch(import.meta.env.VITE_BACK_URL + "/categories" + categoryId, {
       method: "DELETE"
@@ -38,17 +39,17 @@ function MaintainCategories() {
       });
   };
 
-  const startEdit = (category) => {
-    setEditingId(category.id);
+  const startEdit = (category: Category) => {
+    setEditingId(Number(category.id));
     setEditData({ name: category.name, avatar: category.avatar });
   };
 
   const cancelEdit = () => {
-    setEditingId(null);
+    setEditingId(0);
     setEditData({ name: "", avatar: "" });
   };
 
-  const saveEdit = (categoryId) => {
+  const saveEdit = (categoryId: number) => {
     if (!editData.name.trim()) return;
     fetch(import.meta.env.VITE_BACK_URL + "/categories" + categoryId, {
       method: "PUT",
@@ -128,7 +129,7 @@ function MaintainCategories() {
                 src={newCategory.avatar}
                 alt="preview"
                 style={{ width: "42px", height: "42px", objectFit: "contain", borderRadius: "8px", border: "1px solid #e5e7eb" }}
-                onError={e => e.target.style.display = "none"}
+                onError={(e) => (e.currentTarget as HTMLImageElement).style.display = "none"}
               />
             )}
             <button
@@ -215,7 +216,7 @@ function MaintainCategories() {
                                   src={editData.avatar}
                                   alt="preview"
                                   style={{ width: "36px", height: "36px", objectFit: "contain", borderRadius: "6px", border: "1px solid #e5e7eb", flexShrink: 0 }}
-                                  onError={e => e.target.style.display = "none"}
+                                  onError={(e) => (e.currentTarget as HTMLImageElement).style.display = "none"}
                                 />
                               )}
                             </div>
@@ -225,7 +226,7 @@ function MaintainCategories() {
                                 src={category.avatar}
                                 alt={category.name}
                                 style={{ width: "42px", height: "42px", objectFit: "contain", borderRadius: "8px", border: "1px solid #e5e7eb" }}
-                                onError={e => e.target.style.display = "none"}
+                                onError={(e) => (e.currentTarget as HTMLImageElement).style.display = "none"}
                               />
                             ) : (
                               <span style={{ color: "#d1d5db" }}>—</span>
@@ -243,7 +244,7 @@ function MaintainCategories() {
                             <div className="d-flex gap-2">
                               <button
                                 className="btn btn-success btn-sm"
-                                onClick={() => saveEdit(category.id)}
+                                onClick={() => saveEdit(Number(category.id))}
                                 disabled={!editData.name.trim()}
                               >
                                 💾 Save
@@ -265,7 +266,7 @@ function MaintainCategories() {
                               </button>
                               <button
                                 className="btn btn-outline-danger btn-sm"
-                                onClick={() => deleteCategory(category.id, index)}
+                                onClick={() => deleteCategory(Number(category.id), index)}
                               >
                                 🗑 Delete
                               </button>

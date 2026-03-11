@@ -1,9 +1,19 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import type { Product } from '../models/Product'
+import type { CartProduct } from '../models/CartProduct'
 
-const CartContext = createContext()
+const CartContext = createContext({
+cart: [{}],
+addToCart: (_product: Product) => {}, 
+removeFromCart: (_id: number) => {}, 
+updateQuantity: (_id: number, _quantity: number ) => {}, 
+clearCart: () => {}, 
+totalItems: 0, 
+totalPrice: 0
+})
 
-export function CartProvider({ children }) {
-  const [cart, setCart] = useState(() => {
+export function CartProvider({ children } : {children: ReactNode}) {
+  const [cart, setCart] = useState<CartProduct[]>(() => {
     const saved = localStorage.getItem('cart')
     return saved ? JSON.parse(saved) : []
   })
@@ -15,7 +25,7 @@ export function CartProvider({ children }) {
   }, [cart])
 
   // Lisa toode ostukorvi
-  const addToCart = (product) => {
+  const addToCart = (product: Product) => {
    
     setCart(prev => {
       const exists = prev.find(item => item.id === product.id)
@@ -31,12 +41,12 @@ export function CartProvider({ children }) {
   }
 
   // Eemalda toode
-  const removeFromCart = (id) => {
+  const removeFromCart = (id: number) => {
     setCart(prev => prev.filter(item => item.id !== id))
   }
 
   // Muuda kogust
-  const updateQuantity = (id, quantity) => {
+  const updateQuantity = (id: number, quantity: number) => {
     if (quantity < 1) return
     setCart(prev =>
       prev.map(item => item.id === id ? { ...item, quantity } : item)
